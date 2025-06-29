@@ -30,6 +30,8 @@ namespace DefaultNamespace
         [SerializeField] private float acceleration = 10f;
         [SerializeField] private float brakeForce = 50f;
 
+        [SerializeField] private bool canControl;
+
         private float currentSpeed = 0f;
 
         private void Update()
@@ -55,11 +57,8 @@ namespace DefaultNamespace
             }
         }
 
-        private void HandleInput()
+        public void ApplyInput(float horizontalInput, float verticalInput)
         {
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
-
             // Steer front wheels
             foreach (var wheel in wheels)
             {
@@ -84,6 +83,14 @@ namespace DefaultNamespace
                     wheel.wheelCollider.brakeTorque = 0f;
                 }
             }
+        }
+
+        private void HandleInput()
+        {
+            if (!canControl) return;
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+            ApplyInput(horizontalInput, verticalInput);
         }
     }
 }
